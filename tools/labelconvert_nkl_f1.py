@@ -7,6 +7,7 @@ import os
 import pandas as pd
 import cv2
 from sklearn.linear_model import LinearRegression
+import argparse
 
 def linear_regression(xy_pairs):
     x = np.array(xy_pairs[0]).reshape(-1, 1)
@@ -18,76 +19,15 @@ def linear_regression(xy_pairs):
     model.fit(x, y)
     return model.coef_[0], model.intercept_
 
-def find_ego_idx(key_points, fileName, parent_folder):
-    dist_x = []
-    idxs = []
-    l_val = 0
-    r_val = 0
-    for idx, key_point in key_points.iterrows():
-
-        print("key_point: ",key_point)
-        print("idx: ",idx)
-        # p_y = np.polyfit(key_point['x'], key_point['y'], N_DEGREE)
-        # x_min = np.polyval(p_y, 0)
-        # dist_x.append(x_min-0.5)
-        # idxs.append(idx)
-        
-
-    # dist_x = np.array(dist_x)
-    # idxs = np.array(idxs)
-    # idxs_l = idxs[dist_x > 0]#idxs[dist_x > 0]
-    # xs_l = dist_x[dist_x > 0]#dist_x[dist_x > 0]
-    
-    # idxs_r = idxs[dist_x <= 0]#idxs[dist_x <= 0]
-    # xs_r = dist_x[dist_x <= 0]#dist_x[dist_x <= 0]
-
-    # print("---------------")
-    # print(idxs)
-    # print(dist_x)
-    # print((xs_l,xs_r))
-    # print("---------------")
-
-    # if(len(xs_r) == 0):
-    #     # with open("/home/deleted_files.txt", 'w') as txtFile:
-    #     #         txtFile.write(str(fileName))
-    #     #         txtFile.close()
-
-    #     with open(parent_folder + "/deleted_files.txt", 'a') as txtFile:
-    #         txtFile.write("\n" + str(fileName))
-    #         txtFile.close()
-
-    #     return 100, 100
-    # elif(len(xs_l) == 0):
-    #     # with open("/home/deleted_files.txt", 'w') as txtFile:
-    #     #         txtFile.write(str(fileName))
-    #     #         txtFile.close()
-
-    #     with open(parent_folder + "/deleted_files.txt", 'a') as txtFile:
-    #         txtFile.write("\n" + str(fileName))
-    #         txtFile.close()
-
-    #     return 100, 100
-    # else:
-    #     return idxs_l[np.argmax(xs_l)], idxs_r[np.argmin(xs_r)]
-
 def main():
-    root = tk.Tk()
-    default_font = nametofont("TkDefaultFont")
-    default_font.configure(size=20)
+    parser = argparse.ArgumentParser(description='Converts Json labels to .txt with format: N y0start x0start y0end x0end ... yNstart xNstart yNend xNen')
+    # arguments from command line
+    parser.add_argument('--labels_input', required=True, help="The path to the input labels")
+    parser.add_argument('--labels_output', required=True, help='The path to output the converted labels to')
+    args = parser.parse_args()
 
-    menu_font = nametofont("TkMenuFont")
-    menu_font.configure(size=20)
-
-    icon_font = nametofont("TkIconFont")
-    icon_font.configure(size=20)
-
-    text_font = nametofont("TkTextFont")
-    text_font.configure(size=20)
-
-    root.withdraw()
-
-    input__folder_path = filedialog.askdirectory(title="Select the input folder", initialdir="/mnt/data/BenV/row-detection-agronav/train/labels-orig")
-    output_folder_path = filedialog.askdirectory(title="Select the output folder", initialdir="/mnt/data/BenV/row-detection-agronav/train/labels")
+    input__folder_path = args.labels_input
+    output_folder_path = args.labels_output
     progress = 0
     total_files = len(os.listdir(input__folder_path))
 

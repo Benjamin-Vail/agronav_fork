@@ -12,8 +12,6 @@ import argparse
 def linear_regression(xy_pairs):
     x = np.array(xy_pairs[0]).reshape(-1, 1)
     y = np.array(xy_pairs[1])
-    # x = np.array([pair[0] for pair in xy_pairs]).reshape(-1, 1)
-    # y = np.array([pair[1] for pair in xy_pairs])
 
     model = LinearRegression()
     model.fit(x, y)
@@ -45,34 +43,25 @@ def find_ego_idx(key_points, fileName, parent_folder):
     print("---------------")
 
     if(len(xs_r) == 0):
-        # with open("/home/deleted_files.txt", 'w') as txtFile:
-        #         txtFile.write(str(fileName))
-        #         txtFile.close()
-
         with open(parent_folder + "/deleted_files.txt", 'a') as txtFile:
             txtFile.write("\n" + str(fileName))
             txtFile.close()
 
         return 100, 100
     elif(len(xs_l) == 0):
-        # with open("/home/deleted_files.txt", 'w') as txtFile:
-        #         txtFile.write(str(fileName))
-        #         txtFile.close()
-
         with open(parent_folder + "/deleted_files.txt", 'a') as txtFile:
             txtFile.write("\n" + str(fileName))
             txtFile.close()
-
         return 100, 100
     else:
         return idxs_l[np.argmax(xs_l)], idxs_r[np.argmin(xs_r)]
 
 def main():
     
-    parser = argparse.ArgumentParser(description='PyTorch Semantic-Line Training')
+    parser = argparse.ArgumentParser(description='Converts Json labels to .txt with ego trimming and format: N y0start x0start y0end x0end ... yNstart xNstart yNend xNend')
     # arguments from command line
-    parser.add_argument('--labels_input', default="./labels", help="The path to the input labels")
-    parser.add_argument('--labels_output', default="./labels_converted", help='The path to output the converted labels to')
+    parser.add_argument('--labels_input', required=True, help="The path to the input labels")
+    parser.add_argument('--labels_output', required=True, help='The path to output the converted labels to')
     args = parser.parse_args()
 
     input__folder_path = args.labels_input
@@ -138,27 +127,8 @@ def main():
                         f.write(f" {coord}")
                     f.close()
 
-                # image_out_path = label_path.replace('.txt', '.jpg')
-                # cv2.imwrite(image_out_path, img)
-                # cv2.imshow('Image with Lines', img)
-                # cv2.waitKey(0)
-                # cv2.destroyAllWindows()
         progress +=1
 
 if __name__ == "__main__":
     N_DEGREE = 2
     main()
-
-            
-
-# def draw_line(y, x, angle, image, color=(0,0,255), num_directions=24):
-#     '''
-#     Draw a line with point y, x, angle in image with color.
-#     '''
-#     cv2.circle(image, (x, y), 2, color, 2)
-#     H, W = image.shape[:2]
-#     angle = int2arc(angle, num_directions)
-#     point1, point2 = get_boundary_point(y, x, angle, H, W)
-#     cv2.line(image, point1, point2, color, 2)
-#     return image
-
